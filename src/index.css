@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --site-primary: #0c66d0;
+  --site-bg: #f8fafc;
+  --site-surface: #ffffff;
+  --site-text: #0f172a;
+  --site-muted: #64748b;
+  --site-border: #e2e8f0;
+  --site-radius: 2rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply min-h-screen bg-slate-50 text-slate-900 antialiased;
+}
+
+.site-theme {
+  background: var(--site-bg);
+  color: var(--site-text);
+}
+
+.site-theme .bg-slate-50,
+.site-theme .bg-slate-100 {
+  background-color: color-mix(in srgb, var(--site-surface) 88%, var(--site-bg));
+}
+
+.site-theme .bg-white,
+.site-theme .bg-white\/95 {
+  background-color: color-mix(in srgb, var(--site-surface) 96%, transparent);
+}
+
+.site-theme .text-slate-900,
+.site-theme .text-slate-800,
+.site-theme .text-slate-700 {
+  color: var(--site-text);
+}
+
+.site-theme .text-slate-600,
+.site-theme .text-slate-500 {
+  color: var(--site-muted);
+}
+
+.site-theme .border-slate-200,
+.site-theme .border-slate-100 {
+  border-color: var(--site-border);
+}
+
+.site-theme .bg-brand-600 {
+  background-color: var(--site-primary);
+}
+
+.site-theme .text-brand-600,
+.site-theme .text-brand-700,
+.site-theme .text-brand-500 {
+  color: var(--site-primary);
+}
+
+.site-theme .border-brand-600,
+.site-theme .border-brand-200 {
+  border-color: color-mix(in srgb, var(--site-primary) 70%, var(--site-border));
+}
+
+.site-theme .rounded-3xl,
+.site-theme .rounded-\[2rem\] {
+  border-radius: var(--site-radius);
+}
+
+.site-theme-dark {
+  color-scheme: dark;
+}
+
+.business-public-page {
+  background: var(--business-bg);
+  color: var(--business-text);
+  padding: 0;
+}
+
+.business-public-page .bg-white {
+  background-color: var(--business-surface);
+}
+
+.business-public-page .bg-slate-50,
+.business-public-page .bg-slate-100 {
+  background-color: color-mix(in srgb, var(--business-surface) 88%, var(--business-bg));
+}
+
+.business-public-page .text-slate-900,
+.business-public-page .text-slate-800,
+.business-public-page .text-slate-700 {
+  color: var(--business-text);
+}
+
+.business-public-page .text-slate-600,
+.business-public-page .text-slate-500 {
+  color: var(--business-muted);
+}
+
+.business-public-page .text-brand-600,
+.business-public-page .text-brand-500 {
+  color: var(--business-primary);
+}
+
+.business-public-page .border-slate-200,
+.business-public-page .border-brand-200 {
+  border-color: var(--business-border);
+}
+
+.business-public-page .rounded-3xl,
+.business-public-page .rounded-\[2rem\] {
+  border-radius: var(--business-radius);
+}
+
+button,
+input,
+textarea,
+select {
+  @apply font-sans;
+}
+
+.input {
+  @apply w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100;
+}
+
+::selection {
+  background-color: #0e7beb;
+  color: white;
+}

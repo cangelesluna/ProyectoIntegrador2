@@ -1,0 +1,142 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && (
+        request.auth.token.role == 'ADMIN' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN'
+      );
+    }
+
+    function ownsBusiness(businessId) {
+      return signedIn() &&
+        get(/databases/$(database)/documents/businesses/$(businessId)).data.ownerId == request.auth.uid;
+    }
+
+    function validStatisticWrite() {
+      return request.resource.data.keys().hasOnly([
+        'businessId',
+        'views',
+        'whatsappClicks',
+        'callClicks',
+        'emailClicks',
+        'socialClicks',
+        'connectedHours',
+        'lastVisitAt',
+        'lastInteractionAt',
+        'popularProductIds',
+        'searchCount',
+        'categoryViews'
+      ]);
+    }
+
+    function validAnalyticsCreate() {
+      return request.resource.data.keys().hasOnly([
+        'type',
+        'businessId',
+        'categoryId',
+        'term',
+        'zoneId',
+        'onlyOpen',
+        'onlyPromotions',
+        'onlyFeatured',
+        'createdAt'
+      ]);
+    }
+
+    match /users/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow create, update: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /banners/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /news/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /categories/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /businesses/{businessId} {
+      allow read: if true;
+      allow create: if signedIn() && (
+        isAdmin() ||
+        request.auth.uid == request.resource.data.ownerId
+      );
+      allow update: if signedIn() && (
+        isAdmin() ||
+        request.auth.uid == resource.data.ownerId
+      );
+      allow delete: if isAdmin() || (signedIn() && request.auth.uid == resource.data.ownerId);
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update: if signedIn() && (
+        isAdmin() ||
+        ownsBusiness(request.resource.data.businessId)
+      );
+      allow delete: if signedIn() && (
+        isAdmin() ||
+        ownsBusiness(resource.data.businessId)
+      );
+    }
+
+    match /promotions/{promotionId} {
+      allow read: if true;
+      allow create, update: if signedIn() && (
+        isAdmin() ||
+        ownsBusiness(request.resource.data.businessId)
+      );
+      allow delete: if signedIn() && (
+        isAdmin() ||
+        ownsBusiness(resource.data.businessId)
+      );
+    }
+
+    match /gallery/{imageId} {
+      allow read: if true;
+      allow create, update: if signedIn() && (
+        isAdmin() ||
+        ownsBusiness(request.resource.data.businessId)
+      );
+      allow delete: if signedIn() && (
+        isAdmin() ||
+        ownsBusiness(resource.data.businessId)
+      );
+    }
+
+    match /statistics/{statsId} {
+      allow read: if true;
+      allow create, update: if validStatisticWrite();
+      allow delete: if isAdmin();
+    }
+
+    match /analytics/{eventId} {
+      allow read: if isAdmin();
+      allow create: if validAnalyticsCreate();
+      allow update, delete: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

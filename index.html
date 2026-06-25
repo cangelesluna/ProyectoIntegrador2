@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Directorio digital de negocios inspirado en Mall Aventura. Explora empresas, productos y servicios sin registro." />
+    <title>Directorio Digital de Negocios</title>
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <script>
+      (function () {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.pathname + location.search + location.hash) {
+          history.replaceState(null, '', redirect);
+        }
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
